@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     background-color: #111827;
     font-family: Arial;
@@ -9,8 +13,13 @@ body {
 }
 
 .display {
-    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    padding: 5px;
+
     background-color: white;
+    font-size: 30px;
 }
 
 .calc-buttons-grid {
