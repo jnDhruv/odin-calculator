@@ -11,6 +11,12 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
+    if (num2 == 0) {
+        document.body.style.backgroundImage = "url(https://i.insider.com/5aa2f1aec6e980060a8b45eb?width=700)";
+        display.color = "white";
+        reset();
+        return;
+    }
     return num1 / num2;
 }
 
@@ -26,27 +32,69 @@ function operate(op, num1, num2) {
 }
 
 function populateNumber(numStr) {
-    let prevNum = parseInt(display.textContent)
-    let newNum = prevNum*10 + parseInt(numStr);
-    display.textContent = newNum;
+    let prevNum = displayingResult ? '0' : display.textContent;
+    let newNum = prevNum === '0'? numStr : prevNum + numStr;
+
+    displayingResult = false;
+    updateDisplay(newNum);
 
     if (!op) {
-        firstOperand = newNum;
+        firstOperand = parseInt(newNum);
     } else {
-        secondOperand = newNum;
+        secondOperand = parseInt(newNum);
     }
+}
+
+function updateExp(expStr) {
+    displayExp.textContent = expStr;
+}
+
+function updateDisplay(content) {
+    display.textContent = content;
 }
 
 function updateOp(operator) {
     op = operator;
-    display.textContent = "0";
+    updateDisplay('0');
+}
+
+function reset() {
+    firstOperand = 0;
+    secondOperand = 0;
+    op = '';
+    updateDisplay('0');
+    updateExp('');
+}
+
+function clickedOp(event) {
+    updateOp(event.target.id);
+    exp = `${firstOperand} ${op} `;
+    updateExp(exp);
+}
+
+function clickedEquals() {
+    if (!op) {
+        return;
+    }
+
+    let result = operate(op, firstOperand, secondOperand);
+    updateDisplay(result);
+    firstOperand = result;
+    secondOperand = 0;
+    op = '';
+    updateExp('');
+
+    displayingResult = true;
 }
 
 let firstOperand = 0;
 let secondOperand = 0;
 let op = '';
+let exp = '';
+let displayingResult = false;
 
-let display = document.querySelector('.display');
+let display = document.querySelector('.display.result');
+let displayExp = document.querySelector('.display.exp');
 
 const allButtons = document.querySelectorAll(".btn");
 
@@ -62,30 +110,15 @@ for (let btn of allButtons) {
 
     else if (btnClasses.contains("op")) {
         btn.addEventListener("click", (e) => {
-            updateOp(e.target.id);
+            clickedOp(e);
         });
     }
 
     else if (btnClasses.contains("equals")) {
-        btn.addEventListener("click", () => {
-            if (!op) {
-                return;
-            }
-
-            let result = operate(op, firstOperand, secondOperand);
-            display.textContent = result;
-            firstOperand = result;
-            secondOperand = 0;
-            op = '';
-        });
+        btn.addEventListener("click", clickedEquals);
     }
 
     else if (btnClasses.contains("clear")) {
-        btn.addEventListener("click", () => {
-            firstOperand = 0;
-            secondOperand = 0;
-            op = '';
-            display.textContent = '0';
-        });
+        btn.addEventListener("click", reset);
     }
 }
