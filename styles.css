@@ -1,0 +1,34 @@
+body {
+    background-color: #111827;
+    font-family: Arial;
+}
+
+.calc {
+    display: flex;
+    flex-direction: column;
+}
+
+.display {
+    height: 100px;
+    background-color: white;
+}
+
+.calc-buttons-grid {
+    display: grid;
+    grid-template-columns: 75px 75px 75px 75px;
+    width: fit-content;
+}
+
+.calc-buttons-grid .display {
+    grid-column: span 4;
+}
+
+.calc-buttons-grid #clear, #delete {
+    grid-column: span 2;
+}
+
+.btn {
+    font-weight: bold;
+    font-size: 18px;
+    height: 50px;
+}
