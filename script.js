@@ -11,9 +11,8 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-    if (num2 == 0) {
+    if (num2 === 0) {
         document.body.style.backgroundImage = "url(https://i.insider.com/5aa2f1aec6e980060a8b45eb?width=700)";
-        display.color = "white";
         reset();
         return;
     }
@@ -32,10 +31,10 @@ function operate(op, num1, num2) {
 }
 
 function populateNumber(numStr) {
-    let prevNum = displayingResult ? '0' : display.textContent;
+    let prevNum = clearOnNextClick ? '0' : display.textContent;
     let newNum = prevNum === '0'? numStr : prevNum + numStr;
 
-    displayingResult = false;
+    clearOnNextClick = false;
     updateDisplay(newNum);
 
     if (!op) {
@@ -55,15 +54,18 @@ function updateDisplay(content) {
 
 function updateOp(operator) {
     op = operator;
-    updateDisplay('0');
+    clearOnNextClick = true;
+    operatorToggled = true;
 }
 
 function reset() {
     firstOperand = 0;
     secondOperand = 0;
-    op = '';
+    updateOp('');
     updateDisplay('0');
     updateExp('');
+    clearOnNextClick = false;
+    operatorToggled = false;
 }
 
 function clickedOp(event) {
@@ -72,7 +74,7 @@ function clickedOp(event) {
     updateExp(exp);
 }
 
-function clickedEquals() {
+function clickedEquals(op) {
     if (!op) {
         return;
     }
@@ -81,17 +83,19 @@ function clickedEquals() {
     updateDisplay(result);
     firstOperand = result;
     secondOperand = 0;
-    op = '';
+    updateOp('');
     updateExp('');
 
-    displayingResult = true;
+    clearOnNextClick = true;
+    operatorToggled = false;
 }
 
 let firstOperand = 0;
 let secondOperand = 0;
 let op = '';
 let exp = '';
-let displayingResult = false;
+let clearOnNextClick = false;
+let operatorToggled = false;
 
 let display = document.querySelector('.display.result');
 let displayExp = document.querySelector('.display.exp');
@@ -110,12 +114,16 @@ for (let btn of allButtons) {
 
     else if (btnClasses.contains("op")) {
         btn.addEventListener("click", (e) => {
+            if (operatorToggled) {
+                secondOperand = (secondOperand === 0) ? firstOperand : secondOperand;
+                clickedEquals(op);
+            } 
             clickedOp(e);
         });
     }
 
     else if (btnClasses.contains("equals")) {
-        btn.addEventListener("click", clickedEquals);
+        btn.addEventListener("click", () => clickedEquals(op));
     }
 
     else if (btnClasses.contains("clear")) {
