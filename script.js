@@ -90,6 +90,19 @@ function clickedEquals(op) {
     operatorToggled = false;
 }
 
+function clickedDelete() {
+    let oldOperand = display.textContent
+    let newOperand = oldOperand.substring(0, oldOperand.length-1);
+
+    if (!op) {
+        firstOperand = parseInt(newOperand);
+    } else {
+        secondOperand = parseInt(newOperand);
+    }
+    updateDisplay(newOperand);
+    clearOnNextClick = false;
+}
+
 let firstOperand = 0;
 let secondOperand = 0;
 let op = '';
@@ -129,4 +142,8 @@ for (let btn of allButtons) {
     else if (btnClasses.contains("clear")) {
         btn.addEventListener("click", reset);
     }
-}
+
+    else if (btnClasses.contains("delete")) {
+        btn.addEventListener("click", clickedDelete);
+    }
+ }
