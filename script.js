@@ -68,8 +68,12 @@ function reset() {
     operatorToggled = false;
 }
 
-function clickedOp(event) {
-    updateOp(event.target.id);
+function clickedOp(operator) {
+    if (operatorToggled) {
+        secondOperand = (secondOperand === 0) ? firstOperand : secondOperand;
+        clickedEquals(op);
+    }
+    updateOp(operator);
     exp = `${firstOperand} ${op} `;
     updateExp(exp);
 }
@@ -127,11 +131,7 @@ for (let btn of allButtons) {
 
     else if (btnClasses.contains("op")) {
         btn.addEventListener("click", (e) => {
-            if (operatorToggled) {
-                secondOperand = (secondOperand === 0) ? firstOperand : secondOperand;
-                clickedEquals(op);
-            } 
-            clickedOp(e);
+            clickedOp(e.target.id);
         });
     }
 
@@ -146,4 +146,40 @@ for (let btn of allButtons) {
     else if (btnClasses.contains("delete")) {
         btn.addEventListener("click", clickedDelete);
     }
- }
+}
+
+let calcBtnGrid = document.querySelector(".calc-buttons-grid");
+
+document.addEventListener("keydown", (e) => {
+    let pressedKey = e.key;
+    switch (pressedKey) {
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case '0':
+            populateNumber(pressedKey);
+            break;
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+            clickedOp(pressedKey);
+            break;
+        case 'Enter':
+            clickedEquals(op);
+            break;
+        case 'Backspace':
+            if (e.ctrlKey) {
+                reset();
+            } else {
+                clickedDelete();
+            }
+            break;
+    }
+});
