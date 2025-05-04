@@ -32,15 +32,19 @@ function operate(op, num1, num2) {
 
 function populateNumber(numStr) {
     let prevNum = clearOnNextClick ? '0' : display.textContent;
+    if (numStr == '.' && prevNum.includes('.')) {
+        return;
+    }
+
     let newNum = prevNum === '0'? numStr : prevNum + numStr;
 
     clearOnNextClick = false;
     updateDisplay(newNum);
 
     if (!op) {
-        firstOperand = parseInt(newNum);
+        firstOperand = parseFloat(newNum);
     } else {
-        secondOperand = parseInt(newNum);
+        secondOperand = parseFloat(newNum);
     }
 }
 
@@ -146,6 +150,12 @@ for (let btn of allButtons) {
     else if (btnClasses.contains("delete")) {
         btn.addEventListener("click", clickedDelete);
     }
+
+    else if (btnClasses.contains("point")) {
+        btn.addEventListener("click", () => {
+            populateNumber('.');
+        });
+    }
 }
 
 let calcBtnGrid = document.querySelector(".calc-buttons-grid");
@@ -163,6 +173,7 @@ document.addEventListener("keydown", (e) => {
         case '8':
         case '9':
         case '0':
+        case '.':
             populateNumber(pressedKey);
             break;
         case '+':
